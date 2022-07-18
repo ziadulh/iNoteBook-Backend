@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import Notes from './Notes';
 
 export const Home = () => {
+
+  
   return (
-    <div>This is home</div>
+    <div>
+      <p>
+        Add note
+      </p>
+      <Notes/>
+      
+    </div>
   )
 }
