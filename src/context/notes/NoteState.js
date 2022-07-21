@@ -1,10 +1,28 @@
 import React, { useState } from "react";
 import NoteContext from "./noteContext";
 
+
 const NoteState = (props) => {
 
+    const getAllNotes = async () => {
+        console.log("this is for test ");
+
+        const response = await fetch('http://localhost:5000/api/note/fetchallnotes', {
+            method: 'GET', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJhYzM0MjdlMjBjYTI0YmJlYzkyZWE5In0sImlhdCI6MTY1NjA0NjI4NH0.BM9r3WzBTkLo2O_IBHeIA2mCSn1A14Yw65hmVGewi1A'
+            },
+            // body: JSON.stringify(data),
     
-    // eslint-disable-next-line
+          });
+
+          const json = await response.json();
+          setNotes(json);
+    
+    }
+
     const notesInitial = [
         {
             "_id": "62b683cccc9f6acf2cf07db7",
@@ -28,21 +46,36 @@ const NoteState = (props) => {
     const [notes, setNotes] = useState(notesInitial);
 
     // Add Note
-    const addNewNote = (name, description, tag) => {
+    const addNewNote = async (name, description, tag) => {
         const note = {
-            "_id": "62b683cccc9f6acf2cf07db3",
-            "user": "62ac3427e20ca24bbec92ea9",
             "name": name,
             "description": description,
             "tag": tag,
-            "date": "2022-06-25T03:41:00.241Z",
-            "__v": 0
         }
+
+        const response = await fetch('http://localhost:5000/api/note/createNote', {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJhYzM0MjdlMjBjYTI0YmJlYzkyZWE5In0sImlhdCI6MTY1NjA0NjI4NH0.BM9r3WzBTkLo2O_IBHeIA2mCSn1A14Yw65hmVGewi1A'
+            },
+            body: JSON.stringify(note),
+    
+          });
+
+          console.log(response);
+
 
         setNotes(notes.concat(note));
     }
+
+    const deleteNote = (id) => {
+        const newNotes = notes.filter((note) => {return note._id !== id})
+        setNotes(newNotes);
+    }
     return (
-        <NoteContext.Provider value={{notes, setNotes, addNewNote}}>
+        <NoteContext.Provider value={{notes, setNotes, addNewNote, deleteNote, getAllNotes}}>
             {props.children}
         </NoteContext.Provider>
     )
